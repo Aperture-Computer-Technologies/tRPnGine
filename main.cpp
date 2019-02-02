@@ -16,3 +16,5 @@ public:
       class;
   }
 };
+
+//create class for dice rolling with n dice
