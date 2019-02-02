@@ -8,12 +8,12 @@ using namespace std;
 class displayInfo
 {
 public:
-  string class, gender, name, race;
+  char gender, name, race, playerClass;
 
   void displayAllInfo ()
   {
-    cout << "You are " << name << ", " << gender << ", " << " and a " <<
-      class;
+    cout << "You are " << name << ", the " << gender << " " << race <<  ", " << " and a " <<
+      playerClass;
   }
 };
 
