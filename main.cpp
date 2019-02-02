@@ -17,4 +17,14 @@ public:
   }
 };
 
-//create class for dice rolling with n dice
+class dice
+{
+public:
+  int n; \\ value of dice
+    
+  dice(int x) \\ parametrized constructor input amount of faces the dice has
+  {
+    cout << "A " << x << "is rolling. . ." << endl;
+    n = rand() % x; \\ the value of the dice
+  }
+};
