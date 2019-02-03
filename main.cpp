@@ -17,24 +17,45 @@ public:
   }
 };
 
-class dice
+class dice // roll one dice
 {
 public:
-  int n; // value of dice
+  int oneDice; // value of dice
     
   dice(int x) // parametrized constructor input amount of faces the dice has
   {
     cout << "A " << x << " dice is rolling. . ." << endl;
-    n = rand() % x; // the value of the dice
+    oneDice = rand() % x; // the value of the dice
+  }
+};
+
+class multiDice // roll multiple dice
+{
+  int multiDiceSum; // sum of dice values
+  
+  multiDice(int x, int y)
+  {
+    int i, j = 0, k;
+    cout << x << y << "-side dices are rolling. . ." << endl;
+    for(k = 0; k < x; k++)
+    {
+        i = rand() % y;
+        cout << i << "\t";
+        j = j + i;
+    }
+    multiDiceSum = j;
   }
 };
 
 class stdDialogue
 {
   public:
-    char welcomeCity, battleStart, battleEnd; // standard dialogue that can be reused
+    char welcomeCity, battleStart, battleEnd, levelUp, newSkill, newItem; // standard dialogue that can be reused
     
-    welcomeCity = "Welcome, you've arrive at ";
+    welcomeCity = "Welcome, you've arrived at ";
     battleStart = "You entered in battle!";
     battleEnd = "The battle has ended.";
+    levelUp = "Congratulations, you are now lv.";
+    newSkill = "You've achieved ";
+    newItem = "You've found ";
 };
