@@ -37,3 +37,4 @@ class stdDialogue
     welcomeCity = "Welcome, you've arrive at ";
     battleStart = "You entered in battle!";
     battleEnd = "The battle has ended.";
+};
