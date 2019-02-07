@@ -13,12 +13,11 @@
 
 class Attackable {
 public:
-    std::string a_name;
     int health;
     int strength;
     int armour;
 
-    Attackable(std::string name, int hp, int str, int arm);
+    Attackable(int hp, int str, int arm);
 
 private:
 };

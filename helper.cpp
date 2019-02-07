@@ -22,11 +22,11 @@ int Helper::diceroll(int amount, int sided) {
 }
 
 // totally proof of concept, this is not how damage will be generated
-Attackable &Helper::battle(Attackable &attacker, Attackable &attackee) {
-    while (attacker.health > 0 && attackee.health > 0) {
-        attacker.health -= diceroll(1, attackee.strength);
-        attackee.health -= diceroll(1, attacker.strength);
+Attackable &Helper::battle(Attackable &attacker, Attackable &target) {
+    while (attacker.health > 0 && target.health > 0) {
+        attacker.health -= diceroll(1, target.strength);
+        target.health -= diceroll(1, attacker.strength);
     }
-    if (attacker.health > 0) return player;
-    return attackee;
+    if (attacker.health > 0) return attacker;
+    return target;
 }
