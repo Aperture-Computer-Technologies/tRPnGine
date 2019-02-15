@@ -1,5 +1,5 @@
 #include <iostream>
-#include "helper.h"
+#include "engine.h"
 
 
 using std::cout;
@@ -7,7 +7,18 @@ using std::cout;
 int main() {
     Helper testo;
     Attackable player(10, 3, 2);
-    Attackable monster(12, 1, 1);
-    Attackable winner = testo.battle(player, monster);
+
+    for (int n = 0; n < 12; n++) {
+        cout << n << ":";
+        for (int i = 0; i < 10; i++) {
+            cout << testo.diceroll(1, n) << ",";
+        }
+
+        cout << "\n";
+
+
+    }
+
+
     return 0;
 }
