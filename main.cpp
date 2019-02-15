@@ -19,6 +19,8 @@ int main() {
 
     }
 
+    for (int i = 0; i < 5; i++) testo.display_stuff(player);
+
 
     return 0;
 }
