@@ -8,16 +8,14 @@ int main() {
     Helper testo;
     Attackable player(10, 3, 2);
 
-    for (int n = 0; n < 12; n++) {
-        cout << n << ":";
-        for (int i = 0; i < 10; i++) {
-            cout << testo.diceroll(1, n) << ",";
-        }
+    FineAmulet loot3;
+    Health_potion loot4;
+    cout << "Loot3 armr:" << loot3.armr << "\n";
+    cout << "Player armr be4 amulet equip:" << player.armour << "\n";
+    player.equip(loot3);
+cout << "Player armr be4 amulet equip:" << player.armour << "\n";
 
-        cout << "\n";
 
-
-    }
 
 
     return 0;

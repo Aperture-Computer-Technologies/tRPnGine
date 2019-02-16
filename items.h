@@ -12,14 +12,14 @@ Item
 */
 
 // item base classes
-// TODO: LOOK into how you can set the base classes like java, so they can't be initialized
+//
 
 class Item {
 public:
-    int max_hp{ 0 };
-    int str{ 0 };
-    int armr{ 0 };
-    int hp{ 0 };
+    int max_hp;
+    int str;
+    int armr;
+    int hp;
 
 protected:
     bool dummy = true;
@@ -27,64 +27,84 @@ protected:
 };
 
 class Consumable : public Item {
+public:
+    virtual void does_nothing(){};
 protected:
     bool dummy = true;
-    Consumable();
 };
 
-class Wearable : virtual public Item {
 
+////////////////////////////////////////
+class Wearable : public Item {
+public:
+    int type = 0;
+    virtual void does_nothing(){}; // only to make wearable virtual so it can't be initialized
 protected:
-    Wearable(){};
     bool dummy = true;
 };
 
 class Helmet : public Wearable {
+public:
+    int type = 1;
+    void does_nothing(){};
+
 protected:
-    bool dummy = true;
-    // Helmet();
 };
 class Armour : public Wearable {
+public:
+    int type = 2;
+    void does_nothing(){};
+
 protected:
-    bool dummy = true;
-    // Armour();
 };
 class Weapon : public Wearable {
+public:
+    int type = 3;
+    void does_nothing(){};
+
 protected:
-    bool dummy = true;
-    // Weapon();
-};
-class Footwear : public Wearable {
-protected:
-    bool dummy = true;
-    // Footwear();
 };
 
 class Amulet : public Wearable {
+public:
+    int type = 4;
+    void does_nothing(){};
+
 protected:
-    bool dummy = true;
-    // Amulet();
+};
+
+class Footwear : public Wearable {
+public:
+    int type = 5;
+    void does_nothing(){};
+
+protected:
 };
 
 //-------------------------real items ------------------
-class ShitWeapon : Weapon {
+class ShitWeapon : public Weapon {
     int str{ 2 };
     int max_hp{ 0 };
     int armr{ 0 };
 };
 
-class ShitSandal : Footwear {
+class ShitSandal : public  Footwear {
     int max_hp{ 0 };
     int str{ 2 };
     int armr{ 0 };
 };
-
-class FineAmulet : Amulet {
+#include <iostream>
+class FineAmulet : public Amulet {
+public:
     int max_hp{ 2 };
     int str{ 2 };
-    int armr{ -1 };
+    int armr =-1;
+    FineAmulet(){
+        std::cout << "Fineamulet:" << armr << "\n";
+    }
 };
 
-class Health_potion : Consumable {
+class Health_potion : public Consumable {
     int hp{ 100 };
+    
 };

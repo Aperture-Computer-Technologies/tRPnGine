@@ -11,10 +11,9 @@
 #include <array>
 #include <cstdlib>
 #include <ctime>
-#include <iostream>
+// #include <iostream>
 #include <random>
 #include <string>
-#include <typeinfo>
 #include <windows.h>
 using std::cout;
 using std::string;
@@ -27,21 +26,31 @@ public:
     int armour;
 
     Attackable(int max_hp, int str, int arm);
-    void equip(Wearable item);
+    void equip(Helmet item);
+    void equip(Amulet item);
+    void equip(Armour item);
+    void equip(Weapon item);
+    void equip(Footwear item);
     void consume(Consumable Item);
 
 private:
-    // might need to use pointers here, will specify in commit
     Helmet helmet;
     Amulet amulet;
     Armour armor;
     Weapon weapon;
     Footwear footwear;
-    void unequip(Helmet* item);
-    void unequip(Amulet* item);
-    void unequip(Armour* item);
-    void unequip(Weapon* item);
-    void unequip(Footwear* item);
+    // t_x is used to identify what type a wearable is for when you equip or unequip.
+    // the other option was to implement equip and unequip in the various wearable base classes
+    // but I have no idea how to forward declare the class from here in items, without getting
+    // redefinition errors or cyclic include. Both that and the current implementation sound like bad ideas
+    // edit: when I figure out how to cast Wearable to it's subclass correctly, equip will be similar to equip and not
+    // 5 overloaded functions.
+    int t_helmet = 1;
+    int t_armour = 2;
+    int t_weapon = 3;
+    int t_amulet = 4;
+    int t_footwear = 5;
+    void unequip(Wearable item);
 };
 
 class Helper {
@@ -53,7 +62,7 @@ public:
 
     int diceroll(int amount, int sided);
 
-    void display_stuff(Attackable player);
+    void display_stuff(const Attackable& player);
 
     Attackable& battle(Attackable& attacker, Attackable& target);
 
@@ -91,7 +100,7 @@ Attackable& Helper::battle(Attackable& attacker, Attackable& target)
 }
 
 std::array<int, 2> console_dimentions();
-void Helper::display_stuff(Attackable player)
+void Helper::display_stuff(const Attackable& player)
 {
     std::system("CLS");
     std::array<int, 2> dims = console_dimentions();
@@ -116,7 +125,7 @@ void Helper::display_stuff(Attackable player)
 }
 
 // ------------------------------ Attackable member function definitions
-// -----------------------------------------> constructor
+// ----------------------------------------. constructor
 Attackable::Attackable(int mmax_hp, int str, int arm)
 {
     if (mmax_hp <= 0 || str <= 0 || arm <= 0) {
@@ -134,50 +143,83 @@ void Attackable::consume(Consumable item)
     health = (health + item.hp > max_hp) ? max_hp : health + item.hp;
 }
 
-void Attackable::equip(Wearable item)
+void Attackable::equip(Helmet item)
 {
-    unequip(&item);
+    unequip(item);
+    helmet = item;
+    max_hp += item.max_hp;
+    strength += item.str;
+    armour += item.armr;
+}
+void Attackable::equip(Armour item)
+{
+    unequip(item);
+    armor = item;
+    max_hp += item.max_hp;
+    strength += item.str;
+    armour += item.armr;
+}
+void Attackable::equip(Amulet item)
+{
+    cout << "amulet armr:" << item.armr << '\n';
+    // WTF is happening here?
+    unequip(item);
+    amulet = item;
+    max_hp += item.max_hp;
+    strength += item.str;
+    armour += item.armr;
 }
 
-
-void Attackable::unequip(Helmet* item)
+void Attackable::equip(Weapon item)
 {
-    max_hp -= helmet.max_hp;
-    strength -= helmet.str;
-    armour -= helmet.armr ;
-    helmet = Helmet{};
+    unequip(item);
+    weapon = item;
+    max_hp += item.max_hp;
+    strength += item.str;
+    armour += item.armr;
 }
-void Attackable::unequip(Amulet* item)
+void Attackable::equip(Footwear item)
 {
-    max_hp -= amulet.max_hp;
-    strength -= amulet.str;
-    armour -= amulet.armr ;
-    amulet = Amulet{};
-}
-void Attackable::unequip(Armour* item)
-{
-    max_hp -= armor.max_hp;
-    strength -= armor.str;
-    armour -= armor.armr ;
-    armor = Armour{};
-}
-void Attackable::unequip(Weapon* item)
-{
-    max_hp -= weapon.max_hp;
-    strength -= weapon.str;
-    armour -= weapon.armr ;
-    weapon = Weapon{};
-}
-void Attackable::unequip(Footwear* item)
-{
-    max_hp -= footwear.max_hp;
-    strength -= footwear.str;
-    armour -= footwear.armr ;
-    footwear = Footwear{};
+    unequip(item);
+    footwear = item;
+    max_hp += item.max_hp;
+    strength += item.str;
+    armour += item.armr;
 }
 
-//---------------------------------------- random
-// functions-------------------------------
+void Attackable::unequip(Wearable item)
+{
+
+    if (item.type == t_helmet) {
+        max_hp -= item.max_hp;
+        strength -= item.str;
+        armour -= item.armr;
+        helmet = Helmet{};
+    } else if (item.type == t_amulet) {
+        max_hp -= item.max_hp;
+        strength -= item.str;
+        armour -= item.armr;
+        amulet = Amulet{};
+    } else if (item.type == t_armour) {
+        max_hp -= item.max_hp;
+        strength -= item.str;
+        armour -= item.armr;
+        armor = Armour{};
+    } else if (item.type == t_weapon) {
+        max_hp -= item.max_hp;
+        strength -= item.str;
+        armour -= item.armr;
+        weapon = Weapon{};
+
+    } else {
+        max_hp -= item.max_hp;
+        strength -= item.str;
+        armour -= item.armr;
+        footwear = Footwear{};
+    }
+}
+
+//---------------------------------------- random_functions-------------------------------
 
 std::array<int, 2> console_dimentions()
 {
@@ -192,4 +234,3 @@ std::array<int, 2> console_dimentions()
     dimensions[1] = csbi.srWindow.Bottom - csbi.srWindow.Top + 1;
     return dimensions;
 }
-
