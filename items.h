@@ -34,22 +34,27 @@ protected:
 class Wearable : public Item {
 public:
     int type = 0;
+    virtual ~Wearable(){};
+
 protected:
 };
 
 class Helmet : public Wearable {
 public:
     int type = 1;
+
 protected:
 };
 class Armour : public Wearable {
 public:
     int type = 2;
+
 protected:
 };
 class Weapon : public Wearable {
 public:
     int type = 3;
+
 protected:
 };
 
@@ -63,6 +68,7 @@ protected:
 class Footwear : public Wearable {
 public:
     int type = 5;
+
 protected:
 };
 

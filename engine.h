@@ -15,6 +15,10 @@
 #include <random>
 #include <string>
 #include <windows.h>
+
+//
+#include <typeinfo>
+
 using std::cout;
 using std::string;
 
@@ -26,12 +30,12 @@ public:
     int armour;
 
     Attackable(int max_hp, int str, int arm);
-    void equip(Helmet item);
-    void equip(Amulet item);
-    void equip(Armour item);
-    void equip(Weapon item);
-    void equip(Footwear item);
-    void consume(Consumable Item);
+    void equip(Helmet& item);
+    void equip(Amulet& item);
+    void equip(Armour& item);
+    void equip(Weapon& item);
+    void equip(Footwear& item);
+    void consume(Consumable& Item);
 
 private:
     Helmet helmet;
@@ -43,14 +47,16 @@ private:
     // the other option was to implement equip and unequip in the various wearable base classes
     // but I have no idea how to forward declare the class from here in items, without getting
     // redefinition errors or cyclic include. Both that and the current implementation sound like bad ideas
-    // edit: when I figure out how to cast Wearable to it's subclass correctly, equip will be similar to equip and not
-    // 5 overloaded functions.
     int t_helmet = 1;
     int t_armour = 2;
     int t_weapon = 3;
     int t_amulet = 4;
     int t_footwear = 5;
-    void unequip(Wearable& item);
+    void unequip(Helmet& item);
+    void unequip(Amulet& item);
+    void unequip(Armour& item);
+    void unequip(Weapon& item);
+    void unequip(Footwear& item);
 };
 
 class Helper {
@@ -118,32 +124,31 @@ void Helper::display_stuff(const Attackable& player)
    * I thought of doing something right beside the hp/str/armr status screen to
    * do something like a 3 x 3 grid to have a star if you have a helmet, body
    * arm, stuff equiped (weapon, shield) on or of to do that, we need to have
-   * good string formatting. ORRRRR, we could just use a real non-console gui so
-   * we can have sections to display stuff without esxcessive string formatting.
-   * thoughts?
+   * good string formatting.
    */
 }
 
-// ------------------------------ Attackable member function definitions
-// ----------------------------------------. constructor
+// ------------------------------ Attackable member function definitions----------------------------
+
+// constructor
 Attackable::Attackable(int mmax_hp, int str, int arm)
+    : max_hp{ mmax_hp }
+    , health{ mmax_hp }
+    , strength{ str }
+    , armour{ arm }
 {
     if (mmax_hp <= 0 || str <= 0 || arm <= 0) {
         throw std::runtime_error("One of the values used to initialize an "
                                  "Attackable is 0 or less. Don't do that.");
     }
-    max_hp = mmax_hp;
-    health = max_hp;
-    strength = str;
-    armour = arm;
 }
 
-void Attackable::consume(Consumable item)
+void Attackable::consume(Consumable& item)
 {
     health = (health + item.hp > max_hp) ? max_hp : health + item.hp;
 }
 
-void Attackable::equip(Helmet item)
+void Attackable::equip(Helmet& item)
 {
     unequip(item);
     helmet = item;
@@ -151,7 +156,7 @@ void Attackable::equip(Helmet item)
     strength += item.str;
     armour += item.armr;
 }
-void Attackable::equip(Armour item)
+void Attackable::equip(Armour& item)
 {
     unequip(item);
     armor = item;
@@ -159,9 +164,8 @@ void Attackable::equip(Armour item)
     strength += item.str;
     armour += item.armr;
 }
-void Attackable::equip(Amulet item)
+void Attackable::equip(Amulet& item)
 {
-
     unequip(item);
     amulet = item;
     max_hp += item.max_hp;
@@ -169,7 +173,7 @@ void Attackable::equip(Amulet item)
     armour += item.armr;
 }
 
-void Attackable::equip(Weapon item)
+void Attackable::equip(Weapon& item)
 {
     unequip(item);
     weapon = item;
@@ -177,7 +181,7 @@ void Attackable::equip(Weapon item)
     strength += item.str;
     armour += item.armr;
 }
-void Attackable::equip(Footwear item)
+void Attackable::equip(Footwear& item)
 {
     unequip(item);
     footwear = item;
@@ -186,36 +190,47 @@ void Attackable::equip(Footwear item)
     armour += item.armr;
 }
 
-void Attackable::unequip(Wearable& item)
+void Attackable::unequip(Helmet& item)
 {
+    max_hp -= helmet.max_hp;
+    strength -= helmet.str;
+    armour -= helmet.armr;
+    helmet = Helmet{};
+    health = (health > max_hp) ? max_hp : health;
+}
+void Attackable::unequip(Amulet& item)
+{
+    max_hp -= amulet.max_hp;
+    strength -= amulet.str;
+    armour -= amulet.armr;
+    amulet = Amulet{};
+    health = (health > max_hp) ? max_hp : health;
+}
+void Attackable::unequip(Armour& item)
+{
+    max_hp -= armor.max_hp;
+    strength -= armor.str;
+    armour -= armor.armr;
+    armor = Armour{};
+    health = (health > max_hp) ? max_hp : health;
+}
 
-    if (item.type == t_helmet) {
-        max_hp -= helmet.max_hp;
-        strength -= helmet.str;
-        armour -= helmet.armr;
-        helmet = Helmet{};
-    } else if (item.type == t_amulet) {
-        max_hp -= amulet.max_hp;
-        strength -= amulet.str;
-        armour -= amulet.armr;
-        amulet = Amulet{};
-    } else if (item.type == t_armour) {
-        max_hp -= armor.max_hp;
-        strength -= armor.str;
-        armour -= armor.armr;
-        armor = Armour{};
-    } else if (item.type == t_weapon) {
-        max_hp -= weapon.max_hp;
-        strength -= weapon.str;
-        armour -= weapon.armr;
-        weapon = Weapon{};
+void Attackable::unequip(Weapon& item)
+{
+    max_hp -= weapon.max_hp;
+    strength -= weapon.str;
+    armour -= weapon.armr;
+    weapon = Weapon{};
+    health = (health > max_hp) ? max_hp : health;
+}
 
-    } else if (item.type == t_footwear) {
-        max_hp -= footwear.max_hp;
-        strength -= footwear.str;
-        armour -= footwear.armr;
-        footwear = Footwear{};
-    }
+void Attackable::unequip(Footwear& item)
+{
+    max_hp -= footwear.max_hp;
+    strength -= footwear.str;
+    armour -= footwear.armr;
+    footwear = Footwear{};
+    health = (health > max_hp) ? max_hp : health;
 }
 
 //---------------------------------------- random_functions-------------------------------
