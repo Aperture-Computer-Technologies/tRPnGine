@@ -11,7 +11,7 @@
 #include <array>
 #include <cstdlib>
 #include <ctime>
-// #include <iostream>
+#include <iostream>
 #include <random>
 #include <string>
 #include <windows.h>
@@ -50,7 +50,7 @@ private:
     int t_weapon = 3;
     int t_amulet = 4;
     int t_footwear = 5;
-    void unequip(Wearable item);
+    void unequip(Wearable& item);
 };
 
 class Helper {
@@ -161,8 +161,7 @@ void Attackable::equip(Armour item)
 }
 void Attackable::equip(Amulet item)
 {
-    cout << "amulet armr:" << item.armr << '\n';
-    // WTF is happening here?
+
     unequip(item);
     amulet = item;
     max_hp += item.max_hp;
@@ -187,34 +186,34 @@ void Attackable::equip(Footwear item)
     armour += item.armr;
 }
 
-void Attackable::unequip(Wearable item)
+void Attackable::unequip(Wearable& item)
 {
 
     if (item.type == t_helmet) {
-        max_hp -= item.max_hp;
-        strength -= item.str;
-        armour -= item.armr;
+        max_hp -= helmet.max_hp;
+        strength -= helmet.str;
+        armour -= helmet.armr;
         helmet = Helmet{};
     } else if (item.type == t_amulet) {
-        max_hp -= item.max_hp;
-        strength -= item.str;
-        armour -= item.armr;
+        max_hp -= amulet.max_hp;
+        strength -= amulet.str;
+        armour -= amulet.armr;
         amulet = Amulet{};
     } else if (item.type == t_armour) {
-        max_hp -= item.max_hp;
-        strength -= item.str;
-        armour -= item.armr;
+        max_hp -= armor.max_hp;
+        strength -= armor.str;
+        armour -= armor.armr;
         armor = Armour{};
     } else if (item.type == t_weapon) {
-        max_hp -= item.max_hp;
-        strength -= item.str;
-        armour -= item.armr;
+        max_hp -= weapon.max_hp;
+        strength -= weapon.str;
+        armour -= weapon.armr;
         weapon = Weapon{};
 
-    } else {
-        max_hp -= item.max_hp;
-        strength -= item.str;
-        armour -= item.armr;
+    } else if (item.type == t_footwear) {
+        max_hp -= footwear.max_hp;
+        strength -= footwear.str;
+        armour -= footwear.armr;
         footwear = Footwear{};
     }
 }

@@ -6,15 +6,28 @@ using std::cout;
 
 int main() {
     Helper testo;
-    Attackable player(10, 3, 2);
-
+    Attackable player(100, 100, 100);
+    player.health -= 50;
+    ShitWeapon loot1;
+    ShitSandal loot2;
     FineAmulet loot3;
     Health_potion loot4;
-    cout << "Loot3 armr:" << loot3.armr << "\n";
-    cout << "Player armr be4 amulet equip:" << player.armour << "\n";
+    testo.display_stuff(player);
+    system("PAUSE");
     player.equip(loot3);
-cout << "Player armr be4 amulet equip:" << player.armour << "\n";
-
+    testo.display_stuff(player);
+    system("PAUSE");
+    player.consume(loot4);
+    testo.display_stuff(player);
+    system("PAUSE");
+    player.equip(loot2);
+    testo.display_stuff(player);
+    system("PAUSE");
+    player.equip(loot1);
+    testo.display_stuff(player);
+    system("PAUSE");
+    player.equip(loot1);
+    testo.display_stuff(player);
 
 
 
