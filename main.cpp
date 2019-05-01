@@ -1,24 +1,19 @@
-#include <iostream>
 #include "engine.h"
-
+#include <iostream>
 
 using std::cout;
 
-int main() {
+int main()
+{
     Helper testo;
-    Attackable player(10, 3, 2);
+    Attackable player(100, 100, 100);
+    FineAmulet loot3;
 
-    for (int n = 0; n < 12; n++) {
-        cout << n << ":";
-        for (int i = 0; i < 10; i++) {
-            cout << testo.diceroll(1, n) << ",";
-        }
-
-        cout << "\n";
-
-
+    for (int i = 0; i < 5; i++) {
+        player.equip(loot3);
+        system("PAUSE");
+        testo.display_stuff(player);
     }
-
 
     return 0;
 }
